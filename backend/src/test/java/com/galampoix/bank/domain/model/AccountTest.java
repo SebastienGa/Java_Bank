@@ -11,7 +11,7 @@ class AccountTest {
 
     @Test
     void crediter_augmente_le_solde() {
-        Account compte = new Account(UUID.randomUUID(), "Alice", 1000L);
+        Account compte = new Account(UUID.randomUUID(), UUID.randomUUID(), 1000L);
 
         Account credite = compte.crediter(500L);
 
@@ -20,7 +20,7 @@ class AccountTest {
 
     @Test
     void crediter_refuse_un_montant_nul() {
-        Account compte = new Account(UUID.randomUUID(), "Alice", 1000L);
+        Account compte = new Account(UUID.randomUUID(), UUID.randomUUID(), 1000L);
 
         assertThatThrownBy(() -> compte.crediter(0L))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -28,7 +28,7 @@ class AccountTest {
 
     @Test
     void crediter_refuse_un_montant_negatif() {
-        Account compte = new Account(UUID.randomUUID(), "Alice", 1000L);
+        Account compte = new Account(UUID.randomUUID(), UUID.randomUUID(), 1000L);
 
         assertThatThrownBy(() -> compte.crediter(-100L))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -36,7 +36,7 @@ class AccountTest {
 
     @Test
     void debiter_diminue_le_solde() {
-        Account compte = new Account(UUID.randomUUID(), "Bob", 300L);
+        Account compte = new Account(UUID.randomUUID(), UUID.randomUUID(), 300L);
 
         Account debite = compte.debiter(200L);
 
@@ -45,7 +45,7 @@ class AccountTest {
 
     @Test
     void debiter_refuse_de_passer_le_solde_en_negatif() {
-        Account compte = new Account(UUID.randomUUID(), "Bob", 300L);
+        Account compte = new Account(UUID.randomUUID(), UUID.randomUUID(), 300L);
 
         assertThatThrownBy(() -> compte.debiter(400L))
                 .isInstanceOf(IllegalStateException.class);

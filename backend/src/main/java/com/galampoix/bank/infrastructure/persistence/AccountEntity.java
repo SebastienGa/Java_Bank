@@ -2,19 +2,14 @@ package com.galampoix.bank.infrastructure.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.util.UUID;
 
-/**
- * Entité JPA persistée en base. Distincte du modèle de domaine
- * {@code com.galampoix.bank.domain.model.Account} : celle-ci porte les
- * préoccupations techniques (mapping table/colonnes), le domaine porte les
- * règles métier.
- * <p>
- * Constructeur sans argument et setters requis par JPA/Hibernate.
- */
 @Entity
 @Table(name = "accounts")
 public class AccountEntity {
@@ -22,8 +17,9 @@ public class AccountEntity {
     @Id
     private UUID id;
 
-    @Column(name = "titulaire", nullable = false)
-    private String titulaire;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", nullable = false)
+    private ClientEntity client;
 
     @Column(name = "solde_centimes", nullable = false)
     private long soldeCentimes;
@@ -32,9 +28,9 @@ public class AccountEntity {
         // requis par JPA
     }
 
-    public AccountEntity(UUID id, String titulaire, long soldeCentimes) {
+    public AccountEntity(UUID id, ClientEntity client, long soldeCentimes) {
         this.id = id;
-        this.titulaire = titulaire;
+        this.client = client;
         this.soldeCentimes = soldeCentimes;
     }
 
@@ -46,12 +42,12 @@ public class AccountEntity {
         this.id = id;
     }
 
-    public String getTitulaire() {
-        return titulaire;
+    public ClientEntity getClient() {
+        return client;
     }
 
-    public void setTitulaire(String titulaire) {
-        this.titulaire = titulaire;
+    public void setClient(ClientEntity client) {
+        this.client = client;
     }
 
     public long getSoldeCentimes() {

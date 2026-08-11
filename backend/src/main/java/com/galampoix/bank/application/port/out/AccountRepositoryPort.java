@@ -6,16 +6,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Port de sortie (driven port) : contrat que l'application attend d'un
- * adaptateur de persistance, sans jamais dépendre de sa technologie
- * (JPA, JDBC, mémoire, etc.).
- */
 public interface AccountRepositoryPort {
 
     Optional<Account> findById(UUID id);
 
     List<Account> findAll();
+
+    List<Account> findByClientId(UUID clientId);
 
     Account save(Account account);
 }

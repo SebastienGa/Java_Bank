@@ -1,6 +1,7 @@
 package com.galampoix.bank.infrastructure.web;
 
 import com.galampoix.bank.domain.exception.AccountNotFoundException;
+import com.galampoix.bank.domain.exception.ClientNotFoundException;
 import com.galampoix.bank.domain.exception.InsufficientFundsException;
 import com.galampoix.bank.domain.exception.SameAccountTransferException;
 import org.springframework.http.HttpStatus;
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class AccountExceptionHandler {
 
-    @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<ApiError> handleAccountNotFound(AccountNotFoundException e) {
+    @ExceptionHandler({AccountNotFoundException.class, ClientNotFoundException.class})
+    public ResponseEntity<ApiError> handleNotFound(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError(e.getMessage()));
     }
 

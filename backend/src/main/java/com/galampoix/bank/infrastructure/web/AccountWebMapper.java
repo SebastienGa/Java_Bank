@@ -1,17 +1,14 @@
 package com.galampoix.bank.infrastructure.web;
 
 import com.galampoix.bank.domain.model.Account;
+import com.galampoix.bank.domain.model.Client;
 
-/**
- * Traduit le modèle de domaine vers le DTO exposé par l'API REST.
- * Le domaine ne doit jamais fuiter tel quel vers l'extérieur.
- */
 public final class AccountWebMapper {
 
     private AccountWebMapper() {
     }
 
-    public static AccountResponse toResponse(Account account) {
-        return new AccountResponse(account.id(), account.titulaire(), account.soldeCentimes());
+    public static AccountResponse toResponse(Account account, Client client) {
+        return new AccountResponse(account.id(), client.prenom(), client.nom(), account.soldeCentimes());
     }
 }

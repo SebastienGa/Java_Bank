@@ -38,8 +38,8 @@ class TransferMoneyUseCaseTest {
 
     @Test
     void execute_debite_la_source_et_credite_la_destination() {
-        Account source = new Account(UUID.randomUUID(), "Alice", 1000L);
-        Account destination = new Account(UUID.randomUUID(), "Bob", 200L);
+        Account source = new Account(UUID.randomUUID(), UUID.randomUUID(), 1000L);
+        Account destination = new Account(UUID.randomUUID(), UUID.randomUUID(), 200L);
 
         when(accountRepositoryPort.findById(source.id())).thenReturn(Optional.of(source));
         when(accountRepositoryPort.findById(destination.id())).thenReturn(Optional.of(destination));
@@ -60,7 +60,7 @@ class TransferMoneyUseCaseTest {
     @Test
     void execute_refuse_un_virement_vers_soi_meme() {
         UUID accountId = UUID.randomUUID();
-        Account account = new Account(accountId, "Alice", 1000L);
+        Account account = new Account(accountId, UUID.randomUUID(), 1000L);
 
         when(accountRepositoryPort.findById(accountId)).thenReturn(Optional.of(account));
 
@@ -85,7 +85,7 @@ class TransferMoneyUseCaseTest {
 
     @Test
     void execute_refuse_un_virement_si_le_compte_destination_est_introuvable() {
-        Account source = new Account(UUID.randomUUID(), "Alice", 1000L);
+        Account source = new Account(UUID.randomUUID(), UUID.randomUUID(), 1000L);
         UUID destinationId = UUID.randomUUID();
 
         when(accountRepositoryPort.findById(source.id())).thenReturn(Optional.of(source));
@@ -99,8 +99,8 @@ class TransferMoneyUseCaseTest {
 
     @Test
     void execute_refuse_un_virement_si_le_solde_source_est_insuffisant() {
-        Account source = new Account(UUID.randomUUID(), "Alice", 100L);
-        Account destination = new Account(UUID.randomUUID(), "Bob", 200L);
+        Account source = new Account(UUID.randomUUID(), UUID.randomUUID(), 100L);
+        Account destination = new Account(UUID.randomUUID(), UUID.randomUUID(), 200L);
 
         when(accountRepositoryPort.findById(source.id())).thenReturn(Optional.of(source));
         when(accountRepositoryPort.findById(destination.id())).thenReturn(Optional.of(destination));
