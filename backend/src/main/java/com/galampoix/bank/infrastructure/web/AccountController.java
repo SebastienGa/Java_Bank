@@ -2,31 +2,32 @@ package com.galampoix.bank.infrastructure.web;
 
 import com.galampoix.bank.application.usecase.GetAccountByIdUseCase;
 import com.galampoix.bank.application.usecase.ListAccountsUseCase;
+import com.galampoix.bank.application.usecase.TransferMoneyUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Adaptateur d'entrée REST. Ne contient aucune logique métier : il délègue
- * aux cas d'utilisation de la couche application et se contente de
- * traduire domaine -> DTO via {@link AccountWebMapper}.
- */
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
 
     private final ListAccountsUseCase listAccountsUseCase;
     private final GetAccountByIdUseCase getAccountByIdUseCase;
+    private final TransferMoneyUseCase transferMoneyUseCase;
 
     public AccountController(ListAccountsUseCase listAccountsUseCase,
-                              GetAccountByIdUseCase getAccountByIdUseCase) {
+                              GetAccountByIdUseCase getAccountByIdUseCase,
+                              TransferMoneyUseCase transferMoneyUseCase) {
         this.listAccountsUseCase = listAccountsUseCase;
         this.getAccountByIdUseCase = getAccountByIdUseCase;
+        this.transferMoneyUseCase = transferMoneyUseCase;
     }
 
     @GetMapping
@@ -42,5 +43,11 @@ public class AccountController {
                 .map(AccountWebMapper::toResponse)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/transfer")
+    public ResponseEntity<Void> transfer(@PathVariable UUID id, @RequestBody TransferRequest request) {
+        transferMoneyUseCase.execute(id, request.destinationAccountId(), request.montantCentimes());
+        return ResponseEntity.noContent().build();
     }
 }
