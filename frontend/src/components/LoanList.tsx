@@ -7,7 +7,7 @@ export function LoanList() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/loans')
+        fetch(`${import.meta.env.VITE_API_URL}/api/loans`)
             .then((response) => {
                 if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
                 return response.json();

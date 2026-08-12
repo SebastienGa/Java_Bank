@@ -11,7 +11,7 @@ export function AccountList({ onAccountsLoaded }: AccountListProps) {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/accounts')
+        fetch(`${import.meta.env.VITE_API_URL}/api/accounts`)
             .then((response) => {
                 if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
                 return response.json();
