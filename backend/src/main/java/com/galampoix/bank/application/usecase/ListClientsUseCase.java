@@ -6,6 +6,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Cas d'utilisation : lister l'ensemble des clients.
+ * <p>
+ * Ne dépend que du port de sortie {@link ClientRepositoryPort}, jamais
+ * d'une implémentation concrète (JPA, etc.).
+ */
 @Service
 public class ListClientsUseCase {
 
@@ -15,6 +21,11 @@ public class ListClientsUseCase {
         this.clientRepositoryPort = clientRepositoryPort;
     }
 
+    /**
+     * Exécute le cas d'utilisation.
+     *
+     * @return la liste de tous les clients, éventuellement vide
+     */
     public List<Client> execute() {
         return clientRepositoryPort.findAll();
     }

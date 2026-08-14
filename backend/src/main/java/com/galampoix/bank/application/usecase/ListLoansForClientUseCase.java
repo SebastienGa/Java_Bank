@@ -7,6 +7,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Cas d'utilisation : lister les prêts détenus par un client donné.
+ * <p>
+ * Ne dépend que du port de sortie {@link LoanRepositoryPort}, jamais
+ * d'une implémentation concrète (JPA, etc.).
+ */
 @Service
 public class ListLoansForClientUseCase {
 
@@ -16,6 +22,12 @@ public class ListLoansForClientUseCase {
         this.loanRepositoryPort = loanRepositoryPort;
     }
 
+    /**
+     * Recherche les prêts appartenant à un client.
+     *
+     * @param clientId identifiant du client titulaire des prêts
+     * @return la liste des prêts du client, éventuellement vide
+     */
     public List<Loan> execute(UUID clientId) {
         return loanRepositoryPort.findByClientId(clientId);
     }

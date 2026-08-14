@@ -7,6 +7,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Cas d'utilisation : lister les comptes détenus par un client donné.
+ * <p>
+ * Ne dépend que du port de sortie {@link AccountRepositoryPort}, jamais
+ * d'une implémentation concrète (JPA, etc.).
+ */
 @Service
 public class ListAccountsForClientUseCase {
 
@@ -16,6 +22,12 @@ public class ListAccountsForClientUseCase {
         this.accountRepositoryPort = accountRepositoryPort;
     }
 
+    /**
+     * Recherche les comptes appartenant à un client.
+     *
+     * @param clientId identifiant du client titulaire des comptes
+     * @return la liste des comptes du client, éventuellement vide
+     */
     public List<Account> execute(UUID clientId) {
         return accountRepositoryPort.findByClientId(clientId);
     }

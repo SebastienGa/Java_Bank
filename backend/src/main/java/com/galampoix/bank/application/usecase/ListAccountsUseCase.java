@@ -23,6 +23,11 @@ public class ListAccountsUseCase {
         this.accountRepositoryPort = accountRepositoryPort;
     }
 
+    /**
+     * Exécute le cas d'utilisation.
+     *
+     * @return la liste de tous les comptes, éventuellement vide
+     */
     public List<Account> execute() {
         return accountRepositoryPort.findAll();
     }

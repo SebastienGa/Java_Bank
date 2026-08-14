@@ -13,6 +13,10 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Contrôleur REST exposant les opérations liées aux prêts sous
+ * {@code /api/loans}.
+ */
 @RestController
 @RequestMapping("/api/loans")
 public class LoanController {
@@ -25,6 +29,12 @@ public class LoanController {
         this.listClientsUseCase = listClientsUseCase;
     }
 
+    /**
+     * Liste l'ensemble des prêts, enrichis des informations du client
+     * titulaire.
+     *
+     * @return la représentation web de tous les prêts
+     */
     @GetMapping
     public List<LoanResponse> listLoans() {
         Map<UUID, Client> clientsById = listClientsUseCase.execute().stream()

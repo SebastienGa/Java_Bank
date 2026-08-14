@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Implémentation JPA du port de sortie {@link AccountRepositoryPort}.
+ * <p>
+ * Délègue la persistance à {@link SpringDataAccountRepository} et convertit
+ * les entités JPA vers/depuis le modèle de domaine via {@link AccountMapper}.
+ */
 @Repository
 public class JpaAccountRepositoryAdapter implements AccountRepositoryPort {
 

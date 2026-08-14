@@ -10,6 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+/**
+ * Cas d'utilisation : virer une somme d'argent d'un compte vers un autre.
+ * <p>
+ * Ne dépend que du port de sortie {@link AccountRepositoryPort}, jamais
+ * d'une implémentation concrète (JPA, etc.). Le débit et le crédit sont
+ * effectués dans une même transaction afin de garantir la cohérence des
+ * soldes.
+ */
 @Service
 public class TransferMoneyUseCase {
 
@@ -19,6 +27,23 @@ public class TransferMoneyUseCase {
         this.accountRepositoryPort = accountRepositoryPort;
     }
 
+    /**
+     * Effectue un virement entre deux comptes.
+     * <p>
+     * Débite le compte source du montant indiqué puis crédite le compte
+     * destination du même montant, de manière transactionnelle.
+     *
+     * @param sourceAccountId      identifiant du compte à débiter
+     * @param destinationAccountId identifiant du compte à créditer
+     * @param montantCentimes      montant du virement, en centimes ;
+     *                              doit être strictement positif
+     * @throws AccountNotFoundException      si le compte source ou le compte
+     *                                        destination n'existe pas
+     * @throws SameAccountTransferException   si le compte source et le compte
+     *                                        destination sont identiques
+     * @throws InsufficientFundsException     si le solde du compte source est
+     *                                        insuffisant pour couvrir le débit
+     */
     @Transactional
     public void execute(UUID sourceAccountId, UUID destinationAccountId, long montantCentimes) {
         Account source = accountRepositoryPort.findById(sourceAccountId)

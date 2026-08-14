@@ -21,6 +21,14 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Contrôleur REST exposant les opérations liées aux comptes bancaires
+ * sous {@code /api/accounts}.
+ * <p>
+ * Les erreurs métier levées par les cas d'utilisation (compte/client
+ * introuvable, virement invalide, etc.) sont traduites en réponses HTTP
+ * par {@link AccountExceptionHandler}.
+ */
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
@@ -43,6 +51,12 @@ public class AccountController {
         this.getClientUseCase = getClientUseCase;
     }
 
+    /**
+     * Liste l'ensemble des comptes, enrichis des informations du client
+     * titulaire.
+     *
+     * @return la représentation web de tous les comptes
+     */
     @GetMapping
     public List<AccountResponse> listAccounts() {
         Map<UUID, Client> clientsById = listClientsUseCase.execute().stream()
@@ -52,6 +66,16 @@ public class AccountController {
                 .toList();
     }
 
+    /**
+     * Récupère un compte par son identifiant, enrichi des informations du
+     * client titulaire.
+     *
+     * @param id identifiant du compte recherché
+     * @return {@code 200 OK} avec le compte trouvé, ou {@code 404 Not Found}
+     *         si aucun compte ne correspond à cet identifiant
+     * @throws ClientNotFoundException si le compte existe mais que le client
+     *                                 titulaire associé est introuvable
+     */
     @GetMapping("/{id}")
     public ResponseEntity<AccountResponse> getAccount(@PathVariable UUID id) {
         return getAccountByIdUseCase.execute(id)
@@ -64,6 +88,14 @@ public class AccountController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Effectue un virement depuis le compte identifié par {@code id} vers
+     * le compte destination indiqué dans la requête.
+     *
+     * @param id      identifiant du compte source du virement
+     * @param request détails du virement (compte destination et montant)
+     * @return {@code 204 No Content} si le virement a été effectué avec succès
+     */
     @PostMapping("/{id}/transfer")
     public ResponseEntity<Void> transfer(@PathVariable UUID id, @RequestBody TransferRequest request) {
         transferMoneyUseCase.execute(id, request.destinationAccountId(), request.montantCentimes());

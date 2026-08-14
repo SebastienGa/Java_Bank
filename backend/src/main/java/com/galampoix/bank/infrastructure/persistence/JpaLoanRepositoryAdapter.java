@@ -7,6 +7,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Implémentation JPA du port de sortie {@link LoanRepositoryPort}.
+ * <p>
+ * Délègue la persistance à {@link SpringDataLoanRepository} et convertit
+ * les entités JPA vers/depuis le modèle de domaine via {@link LoanMapper}.
+ */
 @Repository
 public class JpaLoanRepositoryAdapter implements LoanRepositoryPort {
 
