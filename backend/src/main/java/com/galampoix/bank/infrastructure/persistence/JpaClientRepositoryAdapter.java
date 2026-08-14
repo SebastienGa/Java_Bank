@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Implémentation JPA du port de sortie {@link ClientRepositoryPort}.
+ * <p>
+ * Délègue l'accès aux données à {@link SpringDataClientRepository} et
+ * convertit les entités JPA en objets de domaine via {@link ClientMapper}.
+ */
 @Repository
 public class JpaClientRepositoryAdapter implements ClientRepositoryPort {
 
@@ -17,12 +23,18 @@ public class JpaClientRepositoryAdapter implements ClientRepositoryPort {
         this.springDataClientRepository = springDataClientRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Client> findById(UUID id) {
         return springDataClientRepository.findById(id)
                 .map(ClientMapper::toDomain);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Client> findAll() {
         return springDataClientRepository.findAll().stream()

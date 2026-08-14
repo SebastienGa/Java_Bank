@@ -7,6 +7,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Implémentation JPA du port de sortie {@link LoanRepositoryPort}.
+ * <p>
+ * Délègue l'accès aux données à {@link SpringDataLoanRepository} et
+ * convertit les entités JPA en objets de domaine via {@link LoanMapper}.
+ */
 @Repository
 public class JpaLoanRepositoryAdapter implements LoanRepositoryPort {
 
@@ -16,6 +22,9 @@ public class JpaLoanRepositoryAdapter implements LoanRepositoryPort {
         this.springDataLoanRepository = springDataLoanRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Loan> findByClientId(UUID clientId) {
         return springDataLoanRepository.findByClientId(clientId).stream()
@@ -23,6 +32,9 @@ public class JpaLoanRepositoryAdapter implements LoanRepositoryPort {
                 .toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Loan> findAll() {
         return springDataLoanRepository.findAll().stream()

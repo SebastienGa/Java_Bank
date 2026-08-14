@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+/**
+ * Contrôleur REST exposant le tableau de bord d'un client : ses
+ * informations personnelles, ses comptes et ses prêts en cours.
+ */
 @RestController
 @RequestMapping("/api/clients")
 public class ClientController {
@@ -27,6 +31,13 @@ public class ClientController {
         this.listLoansForClientUseCase = listLoansForClientUseCase;
     }
 
+    /**
+     * Récupère le tableau de bord d'un client : ses informations
+     * personnelles ainsi que la liste de ses comptes et de ses prêts.
+     *
+     * @param id identifiant du client recherché
+     * @return {@code 200 OK} avec le tableau de bord si le client existe, {@code 404 Not Found} sinon
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ClientDashboardResponse> getClientDashboard(@PathVariable UUID id) {
         return getClientUseCase.execute(id)

@@ -21,6 +21,13 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Contrôleur REST exposant les opérations sur les comptes bancaires :
+ * consultation et virements entre comptes.
+ * <p>
+ * Les exceptions métier levées par les cas d'utilisation sont converties
+ * en réponses HTTP appropriées par {@link AccountExceptionHandler}.
+ */
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
@@ -43,6 +50,11 @@ public class AccountController {
         this.getClientUseCase = getClientUseCase;
     }
 
+    /**
+     * Liste l'ensemble des comptes, enrichis des informations du client titulaire.
+     *
+     * @return la liste de tous les comptes sous forme de {@link AccountResponse}
+     */
     @GetMapping
     public List<AccountResponse> listAccounts() {
         Map<UUID, Client> clientsById = listClientsUseCase.execute().stream()
@@ -52,6 +64,13 @@ public class AccountController {
                 .toList();
     }
 
+    /**
+     * Récupère un compte par son identifiant, enrichi des informations du client titulaire.
+     *
+     * @param id identifiant du compte recherché
+     * @return {@code 200 OK} avec le compte si trouvé, {@code 404 Not Found} sinon
+     * @throws ClientNotFoundException si le client titulaire du compte est introuvable
+     */
     @GetMapping("/{id}")
     public ResponseEntity<AccountResponse> getAccount(@PathVariable UUID id) {
         return getAccountByIdUseCase.execute(id)
@@ -64,6 +83,13 @@ public class AccountController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Effectue un virement depuis le compte spécifié vers un compte destination.
+     *
+     * @param id      identifiant du compte source, à débiter
+     * @param request détails du virement (compte destination et montant)
+     * @return {@code 204 No Content} si le virement a été effectué avec succès
+     */
     @PostMapping("/{id}/transfer")
     public ResponseEntity<Void> transfer(@PathVariable UUID id, @RequestBody TransferRequest request) {
         transferMoneyUseCase.execute(id, request.destinationAccountId(), request.montantCentimes());
