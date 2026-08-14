@@ -74,4 +74,8 @@ public record Account(UUID id, UUID clientId, long soldeCentimes) {
         }
         return new Account(id, clientId, soldeCentimes - montantCentimes);
     }
+
+    public boolean estActif() {
+        return soldeCentimes >= 0;
+    }
 }
