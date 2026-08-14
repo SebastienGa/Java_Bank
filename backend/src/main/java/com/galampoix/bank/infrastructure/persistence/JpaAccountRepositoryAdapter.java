@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Implémentation JPA du port de sortie {@link AccountRepositoryPort}.
+ * <p>
+ * Délègue l'accès aux données à {@link SpringDataAccountRepository} et
+ * convertit les entités JPA en objets de domaine via {@link AccountMapper}.
+ */
 @Repository
 public class JpaAccountRepositoryAdapter implements AccountRepositoryPort {
 
@@ -17,12 +23,18 @@ public class JpaAccountRepositoryAdapter implements AccountRepositoryPort {
         this.springDataAccountRepository = springDataAccountRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Account> findById(UUID id) {
         return springDataAccountRepository.findById(id)
                 .map(AccountMapper::toDomain);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Account> findAll() {
         return springDataAccountRepository.findAll().stream()
@@ -30,6 +42,9 @@ public class JpaAccountRepositoryAdapter implements AccountRepositoryPort {
                 .toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Account> findByClientId(UUID clientId) {
         return springDataAccountRepository.findByClientId(clientId).stream()
@@ -37,6 +52,9 @@ public class JpaAccountRepositoryAdapter implements AccountRepositoryPort {
                 .toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Account save(Account account) {
         AccountEntity saved = springDataAccountRepository.save(AccountMapper.toEntity(account));

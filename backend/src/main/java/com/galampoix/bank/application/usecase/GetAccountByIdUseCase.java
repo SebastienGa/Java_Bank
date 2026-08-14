@@ -24,6 +24,12 @@ public class GetAccountByIdUseCase {
         this.accountRepositoryPort = accountRepositoryPort;
     }
 
+    /**
+     * Récupère le compte correspondant à l'identifiant fourni.
+     *
+     * @param id identifiant du compte recherché
+     * @return le compte correspondant, ou {@link Optional#empty()} s'il n'existe pas
+     */
     public Optional<Account> execute(UUID id) {
         return accountRepositoryPort.findById(id);
     }
