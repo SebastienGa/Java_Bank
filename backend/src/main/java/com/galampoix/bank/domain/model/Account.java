@@ -75,6 +75,18 @@ public record Account(UUID id, UUID clientId, long soldeCentimes) {
         return new Account(id, clientId, soldeCentimes - montantCentimes);
     }
 
+    /**
+     * Indique si le compte est actif.
+     * <p>
+     * Un compte est considéré comme actif tant que son solde reste positif
+     * ou nul. Les invariants du record garantissant déjà qu'un
+     * {@code Account} ne peut jamais être construit avec un solde négatif,
+     * cette méthode retourne actuellement toujours {@code true} ; elle sert
+     * de point d'extension explicite pour une future notion de statut de
+     * compte (par exemple un compte clôturé ou suspendu).
+     *
+     * @return {@code true} si le solde du compte est positif ou nul, {@code false} sinon
+     */
     public boolean estActif() {
         return soldeCentimes >= 0;
     }
