@@ -76,18 +76,18 @@ public record Account(UUID id, UUID clientId, long soldeCentimes) {
     }
 
     /**
-     * Indique si le compte est actif.
-     * <p>
-     * Un compte est considéré comme actif tant que son solde reste positif
-     * ou nul. Les invariants du record garantissant déjà qu'un
-     * {@code Account} ne peut jamais être construit avec un solde négatif,
-     * cette méthode retourne actuellement toujours {@code true} ; elle sert
-     * de point d'extension explicite pour une future notion de statut de
-     * compte (par exemple un compte clôturé ou suspendu).
+     * Applique un intérêt sur le solde du compte.
      *
-     * @return {@code true} si le solde du compte est positif ou nul, {@code false} sinon
+     * @param tauxAnnuel taux d'intérêt annuel à appliquer (ex. 0.02 pour 2 %), strictement positif
+     * @return une nouvelle instance du compte avec le solde augmenté de l'intérêt calculé
+     * @throws IllegalArgumentException si {@code tauxAnnuel} n'est pas strictement positif,
+     *                                   ou si l'intérêt calculé n'est pas strictement positif une fois arrondi
      */
-    public boolean estActif() {
-        return soldeCentimes >= 0;
+    public Account applyInterest(double tauxAnnuel) {
+        if (tauxAnnuel <= 0) {
+            throw new IllegalArgumentException("Le taux d'intérêt doit être positif");
+        }
+        long interetCentimes = Math.round(soldeCentimes * tauxAnnuel);
+        return crediter(interetCentimes);
     }
 }

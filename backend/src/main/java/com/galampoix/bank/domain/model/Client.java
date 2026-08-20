@@ -31,4 +31,13 @@ public record Client(UUID id, String prenom, String nom, String email) {
             throw new IllegalArgumentException("L'email du client est obligatoire");
         }
     }
+
+    /**
+     * Retourne le nom complet du client.
+     *
+     * @return le prénom et le nom du client, séparés par un espace
+     */
+    public String fullName() {
+        return prenom + " " + nom;
+    }
 }
