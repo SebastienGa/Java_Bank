@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import type { Account, ApiError, TransferRequest } from '../types/Account';
+import { formatEuros } from '../lib/format';
 
 interface TransferFormProps {
     accounts: Account[];
@@ -12,6 +13,9 @@ export function TransferForm({ accounts, onTransferSuccess }: Readonly<TransferF
     const [destinationId, setDestinationId] = useState('');
     const [montantEuros, setMontantEuros] = useState('');
     const [submitting, setSubmitting] = useState(false);
+
+    const source = accounts.find((a) => a.id === sourceId);
+    const destinations = accounts.filter((a) => a.id !== sourceId);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -55,50 +59,53 @@ export function TransferForm({ accounts, onTransferSuccess }: Readonly<TransferF
     };
 
     return (
-        <div className="transfer-card">
-            <form onSubmit={handleSubmit}>
-                <h2>Effectuer un virement</h2>
-
-                <div className="form-row">
-                    <label htmlFor="source">Compte source</label>
-                    <select id="source" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
-                        <option value="">-- Sélectionner --</option>
-                        {accounts.map((a) => (
-                            <option key={a.id} value={a.id}>
-                                {a.clientPrenom} {a.clientNom} ({(a.soldeCentimes / 100).toFixed(2)} €)
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="form-row">
-                    <label htmlFor="destination">Compte destinataire</label>
-                    <select id="destination" value={destinationId} onChange={(e) => setDestinationId(e.target.value)}>
-                        <option value="">-- Sélectionner --</option>
-                        {accounts.map((a) => (
-                            <option key={a.id} value={a.id}>
-                                {a.clientPrenom} {a.clientNom}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="form-row">
-                    <label htmlFor="montant">Montant (€)</label>
+        <form className="panel transfer" onSubmit={handleSubmit}>
+            <div className="amount-field">
+                <label htmlFor="montant" className="eyebrow">Montant du virement</label>
+                <div className="amount-input">
                     <input
                         id="montant"
                         type="number"
+                        inputMode="decimal"
                         step="0.01"
                         min="0.01"
+                        placeholder="0,00"
                         value={montantEuros}
                         onChange={(e) => setMontantEuros(e.target.value)}
                     />
+                    <span aria-hidden="true">€</span>
                 </div>
+                {source && <p className="field-hint">Disponible : {formatEuros(source.soldeCentimes)}</p>}
+            </div>
 
-                <button type="submit" className="transfer-submit" disabled={submitting}>
-                    {submitting ? 'Envoi...' : 'Virer'}
-                </button>
-            </form>
-        </div>
+            <div className="field">
+                <label htmlFor="source">Depuis</label>
+                <select id="source" value={sourceId} onChange={(e) => {
+                    setSourceId(e.target.value);
+                    if (e.target.value === destinationId) setDestinationId('');
+                }}>
+                    <option value="">Choisir le compte à débiter</option>
+                    {accounts.map((a) => (
+                        <option key={a.id} value={a.id}>
+                            {a.clientPrenom} {a.clientNom} — {formatEuros(a.soldeCentimes)}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div className="field">
+                <label htmlFor="destination">Vers</label>
+                <select id="destination" value={destinationId} onChange={(e) => setDestinationId(e.target.value)}>
+                    <option value="">Choisir le bénéficiaire</option>
+                    {destinations.map((a) => (
+                        <option key={a.id} value={a.id}>{a.clientPrenom} {a.clientNom}</option>
+                    ))}
+                </select>
+            </div>
+
+            <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
+                {submitting ? 'Envoi en cours…' : 'Valider le virement'}
+            </button>
+        </form>
     );
 }
