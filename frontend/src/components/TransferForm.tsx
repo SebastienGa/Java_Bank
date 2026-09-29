@@ -7,7 +7,7 @@ interface TransferFormProps {
     onTransferSuccess: () => void;
 }
 
-export function TransferForm({ accounts, onTransferSuccess }: TransferFormProps) {
+export function TransferForm({ accounts, onTransferSuccess }: Readonly<TransferFormProps>) {
     const [sourceId, setSourceId] = useState('');
     const [destinationId, setDestinationId] = useState('');
     const [montantEuros, setMontantEuros] = useState('');
@@ -21,8 +21,8 @@ export function TransferForm({ accounts, onTransferSuccess }: TransferFormProps)
             return;
         }
 
-        const montantCentimes = Math.round(parseFloat(montantEuros) * 100);
-        if (isNaN(montantCentimes) || montantCentimes <= 0) {
+        const montantCentimes = Math.round(Number.parseFloat(montantEuros) * 100);
+        if (Number.isNaN(montantCentimes) || montantCentimes <= 0) {
             toast.error('Montant invalide.');
             return;
         }

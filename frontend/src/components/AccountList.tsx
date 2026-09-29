@@ -5,7 +5,7 @@ interface AccountListProps {
     onAccountsLoaded: (accounts: Account[]) => void;
 }
 
-export function AccountList({ onAccountsLoaded }: AccountListProps) {
+export function AccountList({ onAccountsLoaded }: Readonly<AccountListProps>) {
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
