@@ -140,6 +140,8 @@ def main():
         with open(step_summary, "a", encoding="utf-8") as f:
             f.write(markdown)
     else:
+        # Console Windows (cp1252) : forcer l'UTF-8 pour les emojis du résumé.
+        sys.stdout.reconfigure(encoding="utf-8")
         sys.stdout.write(markdown)
 
 
