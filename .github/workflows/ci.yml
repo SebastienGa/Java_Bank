@@ -57,6 +57,65 @@ jobs:
             backend/target/site/jacoco/
             backend/target/test-summary.json
 
+  # Publie test-summary.json en clair sur la branche orpheline ci-reports
+  # (lisible via raw.githubusercontent.com ou l'API, sans dézipper d'artefact).
+  # Pas de boucle : ce workflow ne se déclenche jamais sur un push vers ci-reports.
+  publish-report:
+    name: publish-report
+    needs: backend
+    if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    concurrency:
+      group: ci-reports
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: test-results
+          path: test-results
+
+      - name: Push sur ci-reports
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          summary="$GITHUB_WORKSPACE/test-results/test-summary.json"
+          sha7="${GITHUB_SHA::7}"
+          run_file="runs/$(date -u +%F)-$sha7.json"
+
+          git init -q "$RUNNER_TEMP/reports"
+          cd "$RUNNER_TEMP/reports"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config http.https://github.com/.extraheader \
+            "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+
+          if git fetch -q origin ci-reports; then
+            git checkout -q -b ci-reports FETCH_HEAD
+          else
+            git checkout -q --orphan ci-reports
+          fi
+
+          mkdir -p runs
+          cp "$summary" latest.json
+          cp "$summary" "$run_file"
+          git add latest.json "$run_file"
+          if git diff --cached --quiet; then
+            echo "Rapport identique déjà publié, rien à pousser."
+            exit 0
+          fi
+          git commit -q -m "ci: test report $sha7"
+
+          for attempt in 1 2 3; do
+            git push -q origin ci-reports && exit 0
+            echo "Push refusé (tentative $attempt), rebase sur ci-reports distant."
+            git pull -q --rebase origin ci-reports
+          done
+          exit 1
+
   frontend:
     name: frontend
     runs-on: ubuntu-latest
