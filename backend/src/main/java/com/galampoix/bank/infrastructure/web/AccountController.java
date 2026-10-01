@@ -4,6 +4,7 @@ import com.galampoix.bank.application.usecase.GetAccountByIdUseCase;
 import com.galampoix.bank.application.usecase.GetClientUseCase;
 import com.galampoix.bank.application.usecase.ListAccountsUseCase;
 import com.galampoix.bank.application.usecase.ListClientsUseCase;
+import com.galampoix.bank.application.usecase.ListTransactionsForAccountUseCase;
 import com.galampoix.bank.application.usecase.TransferMoneyUseCase;
 import com.galampoix.bank.domain.exception.ClientNotFoundException;
 import com.galampoix.bank.domain.model.Client;
@@ -37,17 +38,20 @@ public class AccountController {
     private final TransferMoneyUseCase transferMoneyUseCase;
     private final ListClientsUseCase listClientsUseCase;
     private final GetClientUseCase getClientUseCase;
+    private final ListTransactionsForAccountUseCase listTransactionsForAccountUseCase;
 
     public AccountController(ListAccountsUseCase listAccountsUseCase,
                               GetAccountByIdUseCase getAccountByIdUseCase,
                               TransferMoneyUseCase transferMoneyUseCase,
                               ListClientsUseCase listClientsUseCase,
-                              GetClientUseCase getClientUseCase) {
+                              GetClientUseCase getClientUseCase,
+                              ListTransactionsForAccountUseCase listTransactionsForAccountUseCase) {
         this.listAccountsUseCase = listAccountsUseCase;
         this.getAccountByIdUseCase = getAccountByIdUseCase;
         this.transferMoneyUseCase = transferMoneyUseCase;
         this.listClientsUseCase = listClientsUseCase;
         this.getClientUseCase = getClientUseCase;
+        this.listTransactionsForAccountUseCase = listTransactionsForAccountUseCase;
     }
 
     /**
@@ -81,6 +85,13 @@ public class AccountController {
                 })
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/transactions")
+    public List<TransactionResponse> listTransactions(@PathVariable UUID id) {
+        return listTransactionsForAccountUseCase.execute(id).stream()
+                .map(TransactionWebMapper::toResponse)
+                .toList();
     }
 
     /**
