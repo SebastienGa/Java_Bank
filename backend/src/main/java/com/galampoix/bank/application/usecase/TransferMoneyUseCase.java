@@ -1,13 +1,21 @@
 package com.galampoix.bank.application.usecase;
 
 import com.galampoix.bank.application.port.out.AccountRepositoryPort;
+import com.galampoix.bank.application.port.out.ClientRepositoryPort;
+import com.galampoix.bank.application.port.out.TransactionRepositoryPort;
 import com.galampoix.bank.domain.exception.AccountNotFoundException;
+import com.galampoix.bank.domain.exception.ClientNotFoundException;
 import com.galampoix.bank.domain.exception.InsufficientFundsException;
 import com.galampoix.bank.domain.exception.SameAccountTransferException;
 import com.galampoix.bank.domain.model.Account;
+import com.galampoix.bank.domain.model.Client;
+import com.galampoix.bank.domain.model.Transaction;
+import com.galampoix.bank.domain.model.TransactionCategory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -23,9 +31,18 @@ import java.util.UUID;
 public class TransferMoneyUseCase {
 
     private final AccountRepositoryPort accountRepositoryPort;
+    private final ClientRepositoryPort clientRepositoryPort;
+    private final TransactionRepositoryPort transactionRepositoryPort;
+    private final Clock clock;
 
-    public TransferMoneyUseCase(AccountRepositoryPort accountRepositoryPort) {
+    public TransferMoneyUseCase(AccountRepositoryPort accountRepositoryPort,
+                                ClientRepositoryPort clientRepositoryPort,
+                                TransactionRepositoryPort transactionRepositoryPort,
+                                Clock clock) {
         this.accountRepositoryPort = accountRepositoryPort;
+        this.clientRepositoryPort = clientRepositoryPort;
+        this.transactionRepositoryPort = transactionRepositoryPort;
+        this.clock = clock;
     }
 
     /**
@@ -57,7 +74,23 @@ public class TransferMoneyUseCase {
         }
         Account destinationCreditee = destination.crediter(montantCentimes);
 
+        Client titulaireSource = findClient(source.clientId());
+        Client titulaireDestination = findClient(destination.clientId());
+
         accountRepositoryPort.save(sourceDebite);
         accountRepositoryPort.save(destinationCreditee);
+
+        Instant maintenant = clock.instant();
+        transactionRepositoryPort.save(Transaction.debit(source.id(), destination.id(),
+                "Virement vers " + titulaireDestination.fullName(),
+                TransactionCategory.VIREMENT, montantCentimes, maintenant));
+        transactionRepositoryPort.save(Transaction.credit(destination.id(), source.id(),
+                "Virement de " + titulaireSource.fullName(),
+                TransactionCategory.VIREMENT, montantCentimes, maintenant));
+    }
+
+    private Client findClient(UUID clientId) {
+        return clientRepositoryPort.findById(clientId)
+                .orElseThrow(() -> new ClientNotFoundException(clientId));
     }
 }
