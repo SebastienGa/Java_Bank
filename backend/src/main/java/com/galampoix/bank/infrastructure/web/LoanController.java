@@ -24,6 +24,13 @@ public class LoanController {
     private final ListLoansUseCase listLoansUseCase;
     private final ListClientsUseCase listClientsUseCase;
 
+    /**
+     * Crée le contrôleur avec les cas d'utilisation nécessaires pour lister les
+     * prêts et les enrichir des informations du client titulaire.
+     *
+     * @param listLoansUseCase   cas d'utilisation pour lister l'ensemble des prêts
+     * @param listClientsUseCase cas d'utilisation pour lister l'ensemble des clients
+     */
     public LoanController(ListLoansUseCase listLoansUseCase, ListClientsUseCase listClientsUseCase) {
         this.listLoansUseCase = listLoansUseCase;
         this.listClientsUseCase = listClientsUseCase;

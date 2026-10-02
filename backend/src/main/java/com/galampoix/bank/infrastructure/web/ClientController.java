@@ -23,6 +23,14 @@ public class ClientController {
     private final ListAccountsForClientUseCase listAccountsForClientUseCase;
     private final ListLoansForClientUseCase listLoansForClientUseCase;
 
+    /**
+     * Crée le contrôleur avec les cas d'utilisation nécessaires à la constitution
+     * du tableau de bord d'un client.
+     *
+     * @param getClientUseCase             cas d'utilisation pour récupérer un client par son identifiant
+     * @param listAccountsForClientUseCase cas d'utilisation pour lister les comptes d'un client
+     * @param listLoansForClientUseCase    cas d'utilisation pour lister les prêts d'un client
+     */
     public ClientController(GetClientUseCase getClientUseCase,
                              ListAccountsForClientUseCase listAccountsForClientUseCase,
                              ListLoansForClientUseCase listLoansForClientUseCase) {

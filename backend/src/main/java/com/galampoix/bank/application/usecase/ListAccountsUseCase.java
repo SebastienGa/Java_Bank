@@ -19,6 +19,11 @@ public class ListAccountsUseCase {
 
     private final AccountRepositoryPort accountRepositoryPort;
 
+    /**
+     * Crée le cas d'utilisation avec le port de sortie à utiliser pour accéder aux comptes.
+     *
+     * @param accountRepositoryPort port de sortie fournissant l'accès aux comptes persistés
+     */
     public ListAccountsUseCase(AccountRepositoryPort accountRepositoryPort) {
         this.accountRepositoryPort = accountRepositoryPort;
     }
