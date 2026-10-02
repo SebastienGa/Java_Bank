@@ -1,0 +1,18 @@
+{
+  "commit": "8f85c72a3fdb199af88053e29e0c22badd20a23f",
+  "branch": "main",
+  "run_url": "https://github.com/SebastienGa/Java_Bank/actions/runs/37006347727",
+  "tests": {
+    "tests": 21,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "report_files": 8
+  },
+  "failed_tests": [],
+  "line_coverage": {
+    "covered": 78,
+    "missed": 225,
+    "percent": 25.74
+  }
+}
