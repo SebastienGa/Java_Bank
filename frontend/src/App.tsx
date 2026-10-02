@@ -8,7 +8,6 @@ import { formatDateLongue } from './lib/format';
 import { useApi } from './hooks/useApi';
 import type { Account, Loan } from './types/Account';
 import './App.css';
-import './legacy.css';
 
 type View = 'overview' | 'transfer' | 'loans';
 
