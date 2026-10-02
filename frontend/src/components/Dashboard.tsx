@@ -1,20 +1,20 @@
-import type { CSSProperties } from 'react';
 import { Amount } from './Amount';
 import './Dashboard.css';
+import { BankCard } from './BankCard';
 import { Icon } from './Icon';
-import { formatCentimes, formatPourcentage, masquerIdentifiant } from '../lib/format';
+import { formatCentimes, formatPourcentage } from '../lib/format';
+import { teinteSerie } from '../lib/series';
 import type { Account, Loan } from '../types/Account';
-
-const TEINTES = ['var(--series-1)', 'var(--series-2)', 'var(--series-3)', 'var(--series-4)'];
 
 interface DashboardProps {
     accounts: Account[] | null;
     loans: Loan[] | null;
     error: string | null;
     onNewTransfer: () => void;
+    onOpenClient?: (clientId: string) => void;
 }
 
-export function Dashboard({ accounts, loans, error, onNewTransfer }: Readonly<DashboardProps>) {
+export function Dashboard({ accounts, loans, error, onNewTransfer, onOpenClient }: Readonly<DashboardProps>) {
     if (error && !accounts) {
         return (
             <div className="panel-message" role="alert">
@@ -54,14 +54,14 @@ export function Dashboard({ accounts, loans, error, onNewTransfer }: Readonly<Da
                                 key={account.id}
                                 className="allocation-segment"
                                 data-tooltip={`${account.clientPrenom} ${account.clientNom} · ${formatCentimes(account.soldeCentimes)} · ${formatPourcentage(part(account))}`}
-                                style={{ flexGrow: account.soldeCentimes, background: TEINTES[i % TEINTES.length] }}
+                                style={{ flexGrow: account.soldeCentimes, background: teinteSerie(i) }}
                             />
                         ))}
                     </div>
                     <ul className="allocation-legend">
                         {accounts.map((account, i) => (
                             <li key={account.id}>
-                                <span className="dot" style={{ background: TEINTES[i % TEINTES.length] }} />
+                                <span className="dot" style={{ background: teinteSerie(i) }} />
                                 {account.clientPrenom} {account.clientNom}
                                 <span className="allocation-share">{formatPourcentage(part(account))}</span>
                             </li>
@@ -71,23 +71,13 @@ export function Dashboard({ accounts, loans, error, onNewTransfer }: Readonly<Da
 
                 <div className="card-row">
                     {accounts.map((account, i) => (
-                        <article
+                        <BankCard
                             key={account.id}
-                            className="bank-card"
-                            style={{ '--card-tint': TEINTES[i % TEINTES.length], '--delay': `${i * 70}ms` } as CSSProperties}
-                        >
-                            <div className="bank-card-top">
-                                <span className="bank-card-type">Compte courant</span>
-                                <span className="chip" aria-hidden="true" />
-                            </div>
-                            <p className="bank-card-number">{masquerIdentifiant(account.id)}</p>
-                            <div className="bank-card-bottom">
-                                <span className="bank-card-holder">
-                                    {account.clientPrenom} {account.clientNom}
-                                </span>
-                                <Amount centimes={account.soldeCentimes} className="bank-card-balance" />
-                            </div>
-                        </article>
+                            account={account}
+                            index={i}
+                            tint={teinteSerie(i)}
+                            onOpen={onOpenClient && (() => onOpenClient(account.clientId))}
+                        />
                     ))}
                 </div>
             </section>

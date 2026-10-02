@@ -238,6 +238,18 @@
   pointer-events: none;
 }
 
+.bank-card-action {
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bank-card-number {
+  display: block;
+}
+
 .bank-card:hover {
   transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--card-tint) 55%, transparent);
