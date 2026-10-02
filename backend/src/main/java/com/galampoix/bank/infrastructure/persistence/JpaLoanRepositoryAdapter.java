@@ -18,6 +18,11 @@ public class JpaLoanRepositoryAdapter implements LoanRepositoryPort {
 
     private final SpringDataLoanRepository springDataLoanRepository;
 
+    /**
+     * Crée l'adaptateur avec le répertoire Spring Data à utiliser pour l'accès aux données.
+     *
+     * @param springDataLoanRepository répertoire Spring Data JPA pour l'entité {@link LoanEntity}
+     */
     public JpaLoanRepositoryAdapter(SpringDataLoanRepository springDataLoanRepository) {
         this.springDataLoanRepository = springDataLoanRepository;
     }

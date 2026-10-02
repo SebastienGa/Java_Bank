@@ -19,6 +19,11 @@ public class JpaClientRepositoryAdapter implements ClientRepositoryPort {
 
     private final SpringDataClientRepository springDataClientRepository;
 
+    /**
+     * Crée l'adaptateur avec le répertoire Spring Data à utiliser pour l'accès aux données.
+     *
+     * @param springDataClientRepository répertoire Spring Data JPA pour l'entité {@link ClientEntity}
+     */
     public JpaClientRepositoryAdapter(SpringDataClientRepository springDataClientRepository) {
         this.springDataClientRepository = springDataClientRepository;
     }

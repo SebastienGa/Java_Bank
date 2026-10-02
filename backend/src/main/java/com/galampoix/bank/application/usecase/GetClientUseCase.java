@@ -18,6 +18,11 @@ public class GetClientUseCase {
 
     private final ClientRepositoryPort clientRepositoryPort;
 
+    /**
+     * Crée le cas d'utilisation avec le port de sortie à utiliser pour accéder aux clients.
+     *
+     * @param clientRepositoryPort port de sortie fournissant l'accès aux clients persistés
+     */
     public GetClientUseCase(ClientRepositoryPort clientRepositoryPort) {
         this.clientRepositoryPort = clientRepositoryPort;
     }

@@ -18,6 +18,11 @@ public class ListLoansForClientUseCase {
 
     private final LoanRepositoryPort loanRepositoryPort;
 
+    /**
+     * Crée le cas d'utilisation avec le port de sortie à utiliser pour accéder aux prêts.
+     *
+     * @param loanRepositoryPort port de sortie fournissant l'accès aux prêts persistés
+     */
     public ListLoansForClientUseCase(LoanRepositoryPort loanRepositoryPort) {
         this.loanRepositoryPort = loanRepositoryPort;
     }

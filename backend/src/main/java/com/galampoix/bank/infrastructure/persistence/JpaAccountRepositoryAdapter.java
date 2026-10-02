@@ -19,6 +19,11 @@ public class JpaAccountRepositoryAdapter implements AccountRepositoryPort {
 
     private final SpringDataAccountRepository springDataAccountRepository;
 
+    /**
+     * Crée l'adaptateur avec le répertoire Spring Data à utiliser pour l'accès aux données.
+     *
+     * @param springDataAccountRepository répertoire Spring Data JPA pour l'entité {@link AccountEntity}
+     */
     public JpaAccountRepositoryAdapter(SpringDataAccountRepository springDataAccountRepository) {
         this.springDataAccountRepository = springDataAccountRepository;
     }

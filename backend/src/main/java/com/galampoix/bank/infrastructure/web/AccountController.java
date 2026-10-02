@@ -38,6 +38,16 @@ public class AccountController {
     private final ListClientsUseCase listClientsUseCase;
     private final GetClientUseCase getClientUseCase;
 
+    /**
+     * Crée le contrôleur avec les cas d'utilisation nécessaires pour consulter
+     * les comptes et effectuer des virements.
+     *
+     * @param listAccountsUseCase   cas d'utilisation pour lister l'ensemble des comptes
+     * @param getAccountByIdUseCase cas d'utilisation pour récupérer un compte par son identifiant
+     * @param transferMoneyUseCase  cas d'utilisation pour effectuer un virement entre deux comptes
+     * @param listClientsUseCase    cas d'utilisation pour lister l'ensemble des clients
+     * @param getClientUseCase      cas d'utilisation pour récupérer un client par son identifiant
+     */
     public AccountController(ListAccountsUseCase listAccountsUseCase,
                               GetAccountByIdUseCase getAccountByIdUseCase,
                               TransferMoneyUseCase transferMoneyUseCase,
