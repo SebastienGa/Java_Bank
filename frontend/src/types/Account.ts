@@ -1,5 +1,6 @@
 export interface Account {
     id: string;
+    clientId: string;
     clientPrenom: string;
     clientNom: string;
     soldeCentimes: number;
@@ -15,6 +16,13 @@ export interface Loan {
     mensualiteCentimes: number;
     dateDebut: string;
     progression: number;
+}
+
+export interface ClientDashboard {
+    prenom: string;
+    nom: string;
+    comptes: Account[];
+    prets: Loan[];
 }
 
 export interface TransferRequest {

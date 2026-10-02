@@ -20,6 +20,6 @@ public final class AccountWebMapper {
      * @return la réponse REST correspondante
      */
     public static AccountResponse toResponse(Account account, Client client) {
-        return new AccountResponse(account.id(), client.prenom(), client.nom(), account.soldeCentimes());
+        return new AccountResponse(account.id(), account.clientId(), client.prenom(), client.nom(), account.soldeCentimes());
     }
 }
