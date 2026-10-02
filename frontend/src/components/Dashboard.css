@@ -135,12 +135,6 @@
   transform: none;
 }
 
-@keyframes grow {
-  from {
-    transform: scaleX(0);
-  }
-}
-
 .allocation-legend {
   display: flex;
   flex-wrap: wrap;
@@ -322,41 +316,7 @@
   color: var(--ink-muted);
 }
 
-.meter {
-  height: 6px;
-  margin: 4px 0 2px;
-  border-radius: 999px;
-  background: var(--paper-sunken);
-  overflow: hidden;
-}
-
-.meter span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--emerald-700), var(--emerald-400));
-  transform-origin: left;
-  animation: grow 1s var(--ease-out) 0.3s both;
-}
-
 /* ---------- États ---------- */
-
-.panel-message {
-  padding: 24px 28px;
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--danger);
-  border-radius: var(--radius-md);
-  background: var(--paper-raised);
-  color: var(--ink-soft);
-  font-size: 14px;
-}
-
-.panel-message-title {
-  margin-bottom: 4px;
-  font-family: var(--font-display);
-  font-size: 20px;
-  color: var(--navy-900);
-}
 
 .skeleton {
   border-radius: 8px;
@@ -372,12 +332,6 @@
 .skeleton-total {
   width: min(360px, 80%);
   height: 56px;
-}
-
-@keyframes shimmer {
-  to {
-    background-position: -200% 0;
-  }
 }
 
 @media (max-width: 860px) {

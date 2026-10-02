@@ -77,7 +77,7 @@ function App() {
                     {activeView === 'transfer' && (
                         <TransferForm accounts={accounts} onTransferSuccess={() => setRefreshKey((k) => k + 1)} />
                     )}
-                    {activeView === 'loans' && <LoanList />}
+                    {activeView === 'loans' && <LoanList loans={loansApi.data} error={loansApi.error} />}
                 </div>
             </main>
         </div>
