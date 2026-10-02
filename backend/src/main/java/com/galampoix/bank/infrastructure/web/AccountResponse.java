@@ -12,5 +12,5 @@ import java.util.UUID;
  * @param clientNom     nom du client titulaire
  * @param soldeCentimes solde du compte, en centimes
  */
-public record AccountResponse(UUID id, String clientPrenom, String clientNom, long soldeCentimes) {
+public record AccountResponse(UUID id, UUID clientId, String clientPrenom, String clientNom, long soldeCentimes) {
 }
