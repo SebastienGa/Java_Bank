@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { AccountList } from './components/AccountList';
+import { Dashboard } from './components/Dashboard';
 import { TransferForm } from './components/TransferForm';
 import { LoanList } from './components/LoanList';
 import { Icon, type IconName } from './components/Icon';
 import { formatDateLongue } from './lib/format';
-import type { Account } from './types/Account';
+import { useApi } from './hooks/useApi';
+import type { Account, Loan } from './types/Account';
 import './App.css';
 import './legacy.css';
 
@@ -18,8 +19,10 @@ const VIEWS: { id: View; label: string; title: string; icon: IconName }[] = [
 ];
 
 function App() {
-    const [accounts, setAccounts] = useState<Account[]>([]);
     const [refreshKey, setRefreshKey] = useState(0);
+    const accountsApi = useApi<Account[]>('/api/accounts', refreshKey);
+    const loansApi = useApi<Loan[]>('/api/loans', refreshKey);
+    const accounts = accountsApi.data ?? [];
     const [activeView, setActiveView] = useState<View>('overview');
 
     const current = VIEWS.find((view) => view.id === activeView) ?? VIEWS[0];
@@ -63,9 +66,14 @@ function App() {
                 </header>
 
                 <div key={activeView} className="view">
-                    <div hidden={activeView !== 'overview'}>
-                        <AccountList key={refreshKey} onAccountsLoaded={setAccounts} />
-                    </div>
+                    {activeView === 'overview' && (
+                        <Dashboard
+                            accounts={accountsApi.data}
+                            loans={loansApi.data}
+                            error={accountsApi.error}
+                            onNewTransfer={() => setActiveView('transfer')}
+                        />
+                    )}
                     {activeView === 'transfer' && (
                         <TransferForm accounts={accounts} onTransferSuccess={() => setRefreshKey((k) => k + 1)} />
                     )}

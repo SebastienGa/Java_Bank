@@ -2,16 +2,20 @@ import { useEffect, useRef, useState } from 'react';
 
 const DUREE_MS = 900;
 
+function prefersReducedMotion(): boolean {
+    return globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+}
+
 export function useCountUp(target: number): number {
-    const [value, setValue] = useState(0);
-    const currentRef = useRef(0);
+    const [initial] = useState(() => (prefersReducedMotion() ? target : 0));
+    const [value, setValue] = useState(initial);
+    const currentRef = useRef(initial);
 
     useEffect(() => {
         const from = currentRef.current;
         if (from === target) return;
 
-        const reducedMotion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-        const duration = reducedMotion ? 0 : DUREE_MS;
+        const duration = prefersReducedMotion() ? 0 : DUREE_MS;
         const start = performance.now();
         let frame = 0;
 
