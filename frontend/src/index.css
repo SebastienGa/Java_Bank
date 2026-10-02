@@ -21,6 +21,12 @@
 
   --danger: #B42318;
 
+  /* Palette catégorielle validée (fond marine, daltonisme) — ordre fixe. */
+  --series-1: #2FA37C;
+  --series-2: #3F86D6;
+  --series-3: #B98A2E;
+  --series-4: #A86AC9;
+
   --font-display: 'Newsreader', Georgia, serif;
   --font-body: 'Inter', system-ui, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;

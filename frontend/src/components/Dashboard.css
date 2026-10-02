@@ -99,16 +99,69 @@
 
 .allocation-bar {
   display: flex;
-  gap: 3px;
+  gap: 2px;
   height: 10px;
   transform-origin: left;
   animation: grow 0.9s var(--ease-out) both;
 }
 
 .allocation-segment {
+  position: relative;
   flex-basis: 0;
   min-width: 6px;
-  border-radius: 999px;
+  border-radius: 4px;
+  transition: filter 0.2s ease;
+}
+
+.allocation-segment::before {
+  content: "";
+  position: absolute;
+  inset: -8px 0;
+}
+
+.allocation-segment:hover {
+  filter: brightness(1.2);
+}
+
+.allocation-segment::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  z-index: 2;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--paper-raised);
+  box-shadow: var(--shadow-lift);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+.allocation-segment:hover::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.allocation-segment:first-child::after {
+  left: 0;
+  transform: translate(0, 4px);
+}
+
+.allocation-segment:last-child::after {
+  left: auto;
+  right: 0;
+  transform: translate(0, 4px);
+}
+
+.allocation-segment:first-child:hover::after,
+.allocation-segment:last-child:hover::after {
+  transform: none;
 }
 
 @keyframes grow {

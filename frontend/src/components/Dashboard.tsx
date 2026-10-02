@@ -5,7 +5,7 @@ import { Icon } from './Icon';
 import { formatCentimes, formatPourcentage, masquerIdentifiant } from '../lib/format';
 import type { Account, Loan } from '../types/Account';
 
-const TEINTES = ['var(--emerald-400)', 'var(--emerald-200)', 'var(--navy-300)', '#E7E2D6'];
+const TEINTES = ['var(--series-1)', 'var(--series-2)', 'var(--series-3)', 'var(--series-4)'];
 
 interface DashboardProps {
     accounts: Account[] | null;
@@ -53,6 +53,7 @@ export function Dashboard({ accounts, loans, error, onNewTransfer }: Readonly<Da
                             <span
                                 key={account.id}
                                 className="allocation-segment"
+                                data-tooltip={`${account.clientPrenom} ${account.clientNom} · ${formatCentimes(account.soldeCentimes)} · ${formatPourcentage(part(account))}`}
                                 style={{ flexGrow: account.soldeCentimes, background: TEINTES[i % TEINTES.length] }}
                             />
                         ))}
